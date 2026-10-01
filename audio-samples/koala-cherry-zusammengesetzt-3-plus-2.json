@@ -1,0 +1,22 @@
+{
+  "voice_id": "XJ2fW4ybq7HouelYYGcL",
+  "voice_name": "Cherry Twinkle - Bubbly and Sweet",
+  "model_id": "eleven_multilingual_v2",
+  "text": "Wie viel ist drei plus zwei?",
+  "generation": "Four independent TTS requests using the reusable source texts, concatenated after decoding. No trimming, crossfades or additional pauses. The question mark is display punctuation, not part of the number clip.",
+  "segments": [
+    { "key": "ph.wie_viel_ist", "text": "Wie viel ist", "file": "cherry-bausteine/ph.wie_viel_ist.mp3" },
+    { "key": "n.3", "text": "drei", "file": "cherry-bausteine/n.3.mp3" },
+    { "key": "ph.plus", "text": "plus", "file": "cherry-bausteine/ph.plus.mp3" },
+    { "key": "n.2", "text": "zwei", "file": "cherry-bausteine/n.2.mp3" }
+  ],
+  "input_characters": 24,
+  "voice_settings": {
+    "stability": 0.75,
+    "similarity_boost": 0.75,
+    "style": 0.0,
+    "use_speaker_boost": true,
+    "speed": 0.9
+  },
+  "output_format": "mp3_44100_128"
+}

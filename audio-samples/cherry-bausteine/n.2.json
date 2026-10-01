@@ -1,0 +1,18 @@
+{
+  "voice_id": "XJ2fW4ybq7HouelYYGcL",
+  "voice_name": "Cherry Twinkle - Bubbly and Sweet",
+  "text": "zwei",
+  "model_id": "eleven_multilingual_v2",
+  "language_code": "de",
+  "voice_settings": {
+    "stability": 0.75,
+    "similarity_boost": 0.75,
+    "style": 0.0,
+    "use_speaker_boost": true,
+    "speed": 0.9
+  },
+  "output_format": "mp3_44100_128",
+  "source_keys": [
+    "n.2"
+  ]
+}
