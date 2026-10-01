@@ -1,0 +1,19 @@
+{
+  "voice_id": "aHb0rsWUX1Fsr1L8EX7f",
+  "voice_name": "Wally - The Lovable Daydreamer",
+  "text": "Oh nein! Im Dino-Park ist das Dino-Ei verschwunden! Kommst du mit? Wir sind die Koala-Detektei und suchen Hinweise!",
+  "model_id": "eleven_multilingual_v2",
+  "language_code": "de",
+  "voice_settings": {
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0.35,
+    "use_speaker_boost": true,
+    "speed": 0.92
+  },
+  "output_format": "mp3_44100_128",
+  "source_keys": [
+    "st.c1.in.0",
+    "st.c1.in.1"
+  ]
+}
