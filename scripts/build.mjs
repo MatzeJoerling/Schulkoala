@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { Script } from 'node:vm';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
-const PACK = 'audio/cherry/pilot-v1';
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
 const dataUrl = (mime, bytes) => `data:${mime};base64,${bytes.toString('base64')}`;
@@ -17,19 +16,29 @@ function insert(text, token, value) {
 
 export async function build({ outputDir = join(ROOT, 'dist') } = {}) {
   const read = name => readFile(join(ROOT, name));
+  const readAudio = async name => {
+    try {
+      return await read(name);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+      throw new Error(`Sprachpaket fehlt oder ist unvollständig (${name}). Audiodateien sind nicht in Git enthalten.\nStimme in audio-profile.json wählen, dann ausführen:\nnode scripts/export-audio-catalog.mjs\npython3 scripts/generate-audio.py --generate\nSiehe README.md für Voraussetzungen und API-Schlüssel.`, { cause: error });
+    }
+  };
+  const { pack: PACK } = JSON.parse(await read('audio-profile.json'));
   const [source, manifestBytes, audioManifestBytes, workerTemplate, builder] = await Promise.all([
-    read('index.html'), read('manifest.webmanifest'), read(`${PACK}/manifest.json`),
+    read('index.html'), read('manifest.webmanifest'), readAudio(`${PACK}/manifest.json`),
     read('scripts/offline-sw.js'), read('scripts/build.mjs')
   ]);
   const manifest = JSON.parse(audioManifestBytes);
   if (!Array.isArray(manifest.clips) || !manifest.clips.length) throw new Error('Empty audio pack');
-  const clips = {}, icons = new Map();
+  const clips = {}, audioFiles = new Map(), icons = new Map();
   let audioBytes = 0;
   for (const clip of manifest.clips) {
-    if (!/^[\w.-]+\.mp3$/.test(clip.file) || Object.hasOwn(clips, clip.key)) throw new Error('Invalid audio entry');
-    const bytes = await read(`${PACK}/${clip.file}`);
+    if (!/^[\p{L}\p{N}_.-]+\.mp3$/u.test(clip.file) || Object.hasOwn(clips, clip.key)) throw new Error('Invalid audio entry');
+    const bytes = await readAudio(`${PACK}/${clip.file}`);
     if (bytes.length !== clip.bytes || digest(bytes) !== clip.sha256) throw new Error(`Invalid audio: ${clip.key}`);
     clips[clip.key] = dataUrl('audio/mpeg', bytes);
+    audioFiles.set(clip.file, bytes);
     audioBytes += bytes.length;
   }
   if (audioBytes !== manifest.total_bytes) throw new Error('Audio total does not match');
@@ -41,22 +50,27 @@ export async function build({ outputDir = join(ROOT, 'dist') } = {}) {
   for (const bytes of [source, manifestBytes, audioManifestBytes, workerTemplate, builder, ...icons.values()]) hash.update(bytes.length + '\0').update(bytes);
   // Manifest contains SHA-256 hashes of all audio bytes verified above.
   const version = hash.digest('hex').slice(0, 16);
-  const shellFiles = ['index.html', 'manifest.webmanifest', ...icons.keys()];
+  const audioBase = `audio/${version}/`;
+  const shellFiles = ['index.html', 'manifest.webmanifest', ...icons.keys(), audioBase + 'manifest.json'];
   const render = standalone => {
-    const config = { embedded: { manifest, clips }, standalone, webVersion: version, shellFiles };
-    let html = insert(source.toString(), '<script src="./audio-pack.js"></script>', `<script>const AUDIO_PACK = Object.freeze(${json(config)});</script>`);
+    const config = { ...(standalone ? { embedded: { manifest, clips } } : { base: './' + audioBase, manifest: './' + audioBase + 'manifest.json' }), standalone, webVersion: version, shellFiles };
+    const cache = `"koala-ela-${version}-" + new URL('./', self.location.href).pathname`;
+    let html = insert(source.toString(), '<script src="./audio-pack.js"></script>', `<script>const AUDIO_PACK = Object.freeze({...${json(config)}, cache: ${cache}});</script>`);
     for (const [name, bytes] of icons) html = html.replaceAll(`href="${name}"`, `href="${dataUrl('image/png', bytes)}"`);
     if (standalone) html = insert(html, '<link rel="manifest" href="manifest.webmanifest">\n', '');
     for (const [i, match] of [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].entries()) new Script(match[1], { filename: `inline-${i}.js` });
     return html;
   };
   const webHtml = render(false), standaloneHtml = render(true);
-  const worker = insert(insert(workerTemplate.toString(), '{{VERSION}}', version), '{{FILES}}', json(shellFiles));
+  const worker = insert(insert(insert(workerTemplate.toString(), '{{VERSION}}', version), '{{FILES}}', json(shellFiles)), '{{AUDIO_BASE}}', json(audioBase));
   new Script(worker, { filename: 'sw.js' });
   const webFiles = new Map([
     ['index.html', Buffer.from(webHtml)], ['sw.js', Buffer.from(worker)],
-    ['manifest.webmanifest', manifestBytes], ...icons
+    ['manifest.webmanifest', manifestBytes], ...icons,
+    [audioBase + 'manifest.json', audioManifestBytes],
+    ...[...audioFiles].map(([file, bytes]) => [audioBase + file, bytes])
   ]);
+  for (const [file, bytes] of webFiles) if (bytes.length > 25 * 1024 * 1024) throw new Error(`Cloudflare-Datei zu groß: ${file}`);
   const webDir = join(outputDir, 'web'), standaloneDir = join(outputDir, 'standalone');
   // Only replace generated directories, after validating all inputs.
   await Promise.all([rm(webDir, { recursive: true, force: true }), rm(standaloneDir, { recursive: true, force: true })]);

@@ -1,0 +1,10 @@
+{
+  "pack": "audio/ela/full-v1",
+  "voice_id": "NE7AIW5DoJ7lUosXV2KR",
+  "voice_name": "Ela - Cheerful and Happy",
+  "model_id": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_128",
+  "encoding": { "sample_rate": 22050, "channels": 1, "bit_rate": 128000 },
+  "voice_settings": { "stability": 0.75, "similarity_boost": 0.75, "style": 0, "use_speaker_boost": true, "speed": 0.8 },
+  "playback_gain": 0.7
+}

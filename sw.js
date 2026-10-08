@@ -1,7 +1,7 @@
 /* Versionsnummer bei Änderungen an HTML/JS erhöhen. Alle Pfade bleiben im Pages-Unterordner. */
 importScripts('./audio-pack.js');
 const PREFIX = 'koala-shell-' + new URL('./', self.location.href).pathname + '-';
-const V = PREFIX + 'v5';
+const V = PREFIX + 'v8';
 const FILES = ['./', './index.html', './audio-pack.js', AUDIO_PACK.manifest,
   './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
