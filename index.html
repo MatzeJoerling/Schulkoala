@@ -196,6 +196,7 @@ svg.koala .eye{transform-origin:center;transform-box:fill-box;animation:blink 5s
 </div>
 <div id="app"></div>
 <canvas id="confetti"></canvas>
+<script src="./audio-pack.js"></script>
 <script>
 'use strict';
 /* ================= Hilfen ================= */
@@ -236,6 +237,7 @@ function numWord(n) {
 }
 const NUMW = Array.from({ length: 101 }, (_, n) => numWord(n));
 const PHR = {
+  willkommen: 'Hallo! Welchen Fall wollen wir heute lösen?', markiert: 'Schau, das richtige Bild ist jetzt markiert.',
   wieviele: 'Zähle mal: Wie viele siehst du?', tippe_zahl: 'Tippe auf die Zahl', tippe_buchstabe: 'Tippe auf den Buchstaben', plus: 'plus', minus: 'minus',
   wie_viel_ist: 'Wie viel ist', womit: 'Mit welchem Buchstaben fängt', an: 'an?', finde: 'Finde alle', finde_ende: 'und tippe darauf.',
   fehlt: 'Welche Zahl fehlt in der Reihe?', mehr: 'Wo sind mehr Bilder? Tippe darauf.', weniger: 'Wo sind weniger Bilder? Tippe darauf.', kleiner: 'Welche Zahl ist kleiner? Tippe darauf.',
@@ -438,10 +440,96 @@ function clipDel(key) {
   if (idb) try { idb.transaction('clips', 'readwrite').objectStore('clips').delete(key); } catch (e) { /* ignorieren */ }
 }
 
+/* ================= Mitgeliefertes Ela-Sprachpaket ================= */
+const BUNDLED = new Map();
+let packManifest = null, packLoading = null, packSaving = null;
+let packStatus = 'Sprachpaket wird geladen …';
+function showPackStatus(text) {
+  packStatus = text;
+  const el = $('#packstatus'); if (el) el.textContent = text;
+}
+function loadAudioPack() {
+  if (packManifest) return Promise.resolve(packManifest);
+  if (AUDIO_PACK.embedded) {
+    packManifest = AUDIO_PACK.embedded.manifest;
+    for (const [key, url] of Object.entries(AUDIO_PACK.embedded.clips)) BUNDLED.set(key, url);
+    showPackStatus(`${packManifest.clips.length} Ela-Clips sind in dieser HTML-Datei enthalten.`);
+    return Promise.resolve(packManifest);
+  }
+  if (packLoading) return packLoading;
+  packLoading = fetch(AUDIO_PACK.manifest, { signal: AbortSignal.timeout(15000) }).then(r => {
+    if (!r.ok) throw new Error('Manifest fehlt'); return r.json();
+  }).then(m => {
+    if (!Array.isArray(m.clips) || !m.clips.length) throw new Error('Manifest ungültig');
+    for (const c of m.clips) BUNDLED.set(c.key, new URL(AUDIO_PACK.base + c.file, location.href).href);
+    packManifest = m;
+    showPackStatus(`${m.clips.length} Clips · ${(m.total_bytes / 1000).toFixed(0)} kB · offline noch nicht geprüft.`);
+    return m;
+  }).catch(() => { showPackStatus('Sprachpaket nicht erreichbar. Bitte online erneut laden.'); return null; })
+    .finally(() => { packLoading = null; });
+  return packLoading;
+}
+async function validAudio(response, clip) {
+  if (!response || response.status !== 200 || !/^audio\//.test(response.headers.get('Content-Type') || '')) return false;
+  const bytes = await response.clone().arrayBuffer();
+  if (bytes.byteLength !== clip.bytes) return false;
+  const hash = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('') === clip.sha256;
+}
+function prepareAudioPack() {
+  if (packSaving) return packSaving;
+  packSaving = (async () => {
+    const m = await loadAudioPack(); if (!m) return;
+    if (AUDIO_PACK.standalone) {
+      showPackStatus(`${m.clips.length} Clips eingebettet ✓ · Diese HTML-Datei enthält das Spiel und alle Ela-Aufnahmen.`);
+      return;
+    }
+    if (!('caches' in window) || !window.isSecureContext) {
+      showPackStatus('Online spielbar. Offline-Speicher benötigt HTTPS (oder localhost).'); return;
+    }
+    if (AUDIO_PACK.embedded) {
+      try {
+        const cacheName = 'koala-inline-' + new URL('./', location.href).pathname + '-' + AUDIO_PACK.webVersion;
+        const controller = navigator.serviceWorker?.controller;
+        const current = controller && new URL(controller.scriptURL).searchParams.get('v') === AUDIO_PACK.webVersion;
+        if (current && await caches.has(cacheName)) {
+          const cache = await caches.open(cacheName);
+          const complete = (await Promise.all(AUDIO_PACK.shellFiles.map(file => cache.match(new URL(file, location.href).href)))).every(r => r?.ok);
+          if (complete) {
+            showPackStatus(`Offline bereit ✓ · ${m.clips.length} Clips in der HTML-Datei · ${(m.total_bytes / 1000).toFixed(0)} kB Audio`);
+            return;
+          }
+        }
+        showPackStatus('Alle Clips eingebettet. Offline-Webseite wird noch eingerichtet …');
+      } catch (e) { showPackStatus('Alle Clips eingebettet. Offline-Speicher konnte nicht geprüft werden.'); }
+      return;
+    }
+    let done = 0;
+    try {
+      const cache = await caches.open(AUDIO_PACK.cache);
+      for (const clip of m.clips) {
+        const url = BUNDLED.get(clip.key);
+        if (!(await validAudio(await cache.match(url), clip))) {
+          const response = await fetch(url, { cache: 'reload', signal: AbortSignal.timeout(15000) });
+          if (!(await validAudio(response, clip))) throw new Error('Audiodatei unvollständig');
+          await cache.put(url, response);
+        }
+        showPackStatus(`Offline speichern: ${++done}/${m.clips.length} Clips …`);
+      }
+      const controller = navigator.serviceWorker.controller;
+      const current = controller && (!AUDIO_PACK.webVersion || new URL(controller.scriptURL).searchParams.get('v') === AUDIO_PACK.webVersion);
+      showPackStatus(current
+        ? `Offline bereit ✓ · ${done} Clips · ${(m.total_bytes / 1000000).toFixed(1)} MB Audio`
+        : 'Alle Clips gespeichert. Offline-Webseite wird noch eingerichtet …');
+    } catch (e) { showPackStatus(`${done}/${m.clips.length} Clips geprüft. Download unterbrochen – bitte erneut laden.`); }
+  })().finally(() => { packSaving = null; });
+  return packSaving;
+}
+
 /* ================= Sprache ================= */
 let HT = 0;
 const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
-let spkToken = 0, curAudio = null, voiceObj = null, MUTED = false;   // MUTED gilt nur bis die App neu geöffnet wird
+let spkToken = 0, cancelAudio = null, voiceObj = null, MUTED = false;   // MUTED gilt nur bis die App neu geöffnet wird
 function deVoices() { return synth ? synth.getVoices().filter(v => /^de/i.test(v.lang)) : []; }
 function chooseVoice() {
   const vs = deVoices(); if (!vs.length) { voiceObj = null; return; }
@@ -486,33 +574,84 @@ function ttsSay(text, token) {
 }
 function playClip(url, token) {
   return new Promise(res => {
-    if (token !== spkToken) return res();
-    const a = new Audio(url); curAudio = a;
-    const fin = () => res();
-    a.onended = fin; a.onerror = fin;
-    a.play().catch(fin);
-    setTimeout(fin, 15000);
+    if (token !== spkToken) return res(false);
+    // Ein per Fingertipp entsperrter AudioContext spielt auch auf iOS ganze Clip-Ketten.
+    const controller = new AbortController();
+    let source = null, gain = null, timer = null, done = false;
+    const fin = ok => {
+      if (done) return; done = true; clearTimeout(timer); controller.abort();
+      if (source) { source.onended = null; try { source.stop(); source.disconnect(); } catch (e) { /* bereits beendet */ } }
+      if (gain) gain.disconnect();
+      if (cancelAudio === cancel) cancelAudio = null;
+      res(ok);
+    };
+    const cancel = () => fin(false); cancelAudio = cancel;
+    timer = setTimeout(cancel, 15000); // nur Laden/Decodieren, keine Grenze für lange Aufnahmen
+    (async () => {
+      try {
+        audioUnlock();
+        if (!actx) return fin(false);
+        await actx.resume();
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) return fin(false);
+        const buffer = await actx.decodeAudioData(await response.arrayBuffer());
+        if (done || token !== spkToken || actx.state !== 'running') return fin(false);
+        clearTimeout(timer);
+        source = actx.createBufferSource(); source.buffer = buffer;
+        gain = actx.createGain();
+        gain.gain.value = [...BUNDLED.values()].includes(url) ? (packManifest?.playback_gain ?? 1) : 1;
+        source.connect(gain); gain.connect(actx.destination);
+        source.onended = () => fin(true);
+        timer = setTimeout(cancel, buffer.duration * 1000 + 3000);
+        source.start();
+      } catch (e) { fin(false); }
+    })();
   });
 }
 function stopSpeech() {
+  clearTimeout(screenTimer);
   spkToken++;
   let was = false;
   try { if (synth && (synth.speaking || synth.pending)) { was = true; synth.cancel(); } } catch (e) { /* */ }
-  if (curAudio) { try { curAudio.pause(); } catch (e) { /* */ } curAudio = null; }
+  if (cancelAudio) cancelAudio();
   return was;
 }
-/* segs: [{k:'ph.wieviele', t:'Wie viele…', p:1}] – Aufnahme (k) hat Vorrang, sonst iPad-Stimme (t) */
-async function speak(segs, force) {
+/* Priorität: eigene Aufnahme → Ela-Datei → Gerätestimme. */
+function matchingSentence(segs) {
+  // Eine eigene Aufnahme eines Bausteins darf niemals vom fertigen Satz verdeckt werden.
+  if (segs.some(s => s.k && CLIPS.has(s.k))) return null;
+  return packManifest?.clips.find(c => c.replaces?.length === segs.length &&
+    BUNDLED.has(c.key) && c.replaces.every((key, i) => key === (segs[i].k || segs[i].t)));
+}
+async function speak(segs, force, compose = true) {
   if ((!S.set.speak || MUTED) && !force) { stopSpeech(); return; }
   const was = stopSpeech();
   const token = spkToken;
+  await Promise.all([audioReady, recordingsReady]);
+  if (token !== spkToken) return;
   if (was) await sleep(70);
+  const sentence = compose && matchingSentence(segs);
+  if (sentence) {
+    for (const url of [CLIPS.get(sentence.key), BUNDLED.get(sentence.key)].filter(Boolean)) {
+      if (token !== spkToken) return;
+      if (await playClip(url, token)) return;
+    }
+    // Defekter Satzclip: mit den ursprünglichen Aufnahmen/Texten weitergehen.
+  }
   let buf = [];
   const flush = async () => { if (buf.length) { let txt = buf.join(' ').replace(/ ([?.!,])/g, '$1'); buf = []; if (!/[A-Za-zÄÖÜäöüß0-9]/.test(txt)) return; if (!/[.!?]$/.test(txt)) txt += '.'; await ttsSay(txt, token); } };
   for (const s of segs) {
     if (token !== spkToken) return;
-    if (s.k && CLIPS.has(s.k)) { await flush(); await playClip(CLIPS.get(s.k), token); }
-    else if (s.t) { buf.push((s.p && buf.length ? '. ' : '') + s.t); }
+    const urls = s.k ? [CLIPS.get(s.k), BUNDLED.get(s.k)].filter(Boolean) : [];
+    let played = false;
+    if (urls.length) {
+      await flush();
+      for (const url of urls) {
+        if (token !== spkToken) return;
+        if (await playClip(url, token)) { played = true; break; }
+      }
+    }
+    if (!played && s.t) buf.push((s.p && buf.length ? '. ' : '') + s.t);
   }
   if (token === spkToken) await flush();
 }
@@ -582,8 +721,8 @@ async function poolAnim(sel) {
   for (const bar of bars) {
     if (!bar.isConnected || my !== HT) return;
     const k = bar.children.length;
-    if (k === 10) { n += 10; bar.classList.add('hl'); if (S.set.speak) speak([N(n)]); await sleep(1000); }
-    else { bar.classList.add('hl'); for (let i = 1; i <= k; i++) { if (!bar.isConnected || my !== HT) return; n++; if (S.set.speak) speak([N(n)]); await sleep(700); } }
+    if (k === 10) { n += 10; bar.classList.add('hl'); if (S.set.speak) await speak([N(n)]); await sleep(320); }
+    else { bar.classList.add('hl'); for (let i = 1; i <= k; i++) { if (!bar.isConnected || my !== HT) return; n++; if (S.set.speak) await speak([N(n)]); await sleep(320); } }
   }
 }
 function numOpts(c, max, n = 4, step = 1) {
@@ -623,8 +762,8 @@ async function countAnim(sel, from = 0) {
   for (let i = from; i < its.length; i++) {
     if (!its[i].isConnected || my !== HT) return;
     its[i].classList.add('n'); its[i].dataset.n = i + 1; its[i].style.transform = 'scale(1.2)';
-    if (S.set.speak) { speak([N(i + 1)]); }
-    await sleep(720);
+    if (S.set.speak) await speak([N(i + 1)]);
+    await sleep(320);
     if (its[i].isConnected) its[i].style.transform = '';
     if (my !== HT) return;
   }
@@ -652,7 +791,8 @@ function bigPair(kind, lv, max) {
 const STEPS = { 10: [[1], [1], [1]], 20: [[1], [1, 2], [1, 2, 5]], 50: [[1], [1, 2, 5, 10], [2, 5, 10]], 100: [[1, 10], [2, 5, 10], [2, 5, 10]] };
 const GEN = {
   count(last) {
-    const max = lvMax('count'); let n; do { n = rnd(1, max); } while (n === last.n && max > 1);
+    const max = lvMax('count'); let n;
+    do { n = rnd(1, max); } while (n === last.n && max > 1);
     const e = pick(ITEMS);
     return { skill: 'count', n, promptH: 'Zähle mal: Wie viele siehst du?', segs: [P('wieviele')], body: n > 20 ? pool(n, e, 'big') : grp(n, e, 'big'), opts: numTiles(numOpts(n, max)), correct: n,
       hint: () => n > 20 ? poolAnim('#rbody') : countAnim('#rbody'), reveal: [N(n)] };
@@ -662,7 +802,7 @@ const GEN = {
     return { skill: 'numrec', promptH: `Tippe auf die Zahl <b>${n}</b>`, segs: [P('tippe_zahl'), N(n)], body: '<div class="bigpic" style="opacity:.9">👆</div>',
       opts: numTiles(numOpts(n, max)), correct: n, hint: null, reveal: [N(n)] };
   },
-  plus() {
+  plus(last) {
     const max = lvMax('plus'), lv = sk('plus').lv, e = pick(ITEMS); let a, b, s, big = max > 20;
     if (big) [a, b, s] = bigPair('plus', lv, max); else { a = rnd(1, max - 1); b = rnd(1, max - a); s = a + b; }
     return { skill: 'plus', promptH: `Wie viel ist <b>${a} + ${b}</b>?`, segs: [P('wie_viel_ist'), N(a), P('plus'), N(b), Q],
@@ -677,7 +817,7 @@ const GEN = {
       body: `<div class="eq ${big ? 'bigeq' : ''}">${big ? pool(a, e) : grp(a, e)}<div class="eqd">−</div>${big ? pool(b, e) : grp(b, e)}</div><div class="eqd ${big ? 'sm' : ''}">${a} − ${b} = <span class="q">?</span></div>`,
       opts: numTiles(numOpts(s, Math.max(max, a), 4, b % 10 === 0 ? 10 : 1)), correct: s,
       hint: big ? (() => { $('#rbody').innerHTML = `<div class="eqd">${a} − ${b} = ${s}</div>${pool(s, e, 'big')}`; return poolAnim('#rbody'); })
-        : (async () => { const my = HT; const first = $$('#rbody .grp')[0]; const its = $$('.it', first); its.slice(a - b).forEach(i => i.classList.add('gone')); await sleep(600); const left = its.slice(0, a - b); for (let i = 0; i < left.length; i++) { if (!left[i].isConnected || my !== HT) return; left[i].classList.add('n'); left[i].dataset.n = i + 1; speak([N(i + 1)]); await sleep(720); } }),
+        : (async () => { const my = HT; const first = $$('#rbody .grp')[0]; const its = $$('.it', first); its.slice(a - b).forEach(i => i.classList.add('gone')); await sleep(600); const left = its.slice(0, a - b); for (let i = 0; i < left.length; i++) { if (!left[i].isConnected || my !== HT) return; left[i].classList.add('n'); left[i].dataset.n = i + 1; await speak([N(i + 1)]); await sleep(320); } }),
       reveal: [N(s)] };
   },
   missing() {
@@ -689,7 +829,7 @@ const GEN = {
     return { skill: 'missing', step, promptH: 'Welche Zahl fehlt in der Reihe?', segs: [P('fehlt')],
       body: `<div class="seq ${seq.some(v => v >= 100) ? 'w3' : ''}">${seq.map((v, i) => `<div class="sq ${i === hole ? 'q' : ''}">${i === hole ? '?' : v}</div>`).join('')}</div>`,
       opts: numTiles(numOpts(c, Math.max(max, c), 4, step)), correct: c,
-      hint: async () => { const my = HT; for (const v of seq) { if (my !== HT) return; speak([N(v)]); await sleep(800); if (!$('#rbody')) return; } }, reveal: [N(c)] };
+      hint: async () => { const my = HT; for (const v of seq) { if (my !== HT) return; await speak([N(v)]); await sleep(320); if (!$('#rbody')) return; } }, reveal: [N(c)] };
   },
   more(last) {
     const max = lvMax('more'), lv = sk('more').lv, less = Math.random() < .4; let a, b;
@@ -718,9 +858,9 @@ const GEN = {
     if (m === 'nach') { const n = rnd(lv >= 3 ? 0 : 1, max - 1); c = n + 1; promptH = `Welche Zahl kommt direkt nach <b>${n}</b>?`; segs = [P('nach'), N(n), Q]; }
     else if (m === 'vor') { const n = rnd(lv >= 3 ? 1 : 2, max); c = n - 1; promptH = `Welche Zahl kommt direkt vor <b>${n}</b>?`; segs = [P('vor'), N(n), Q]; }
     else { const x = rnd(0, max - 2); c = x + 1; promptH = `Welche Zahl steht zwischen <b>${x}</b> und <b>${x + 2}</b>?`; segs = [P('zwischen'), N(x), P('und'), N(x + 2), Q]; }
-    const row = [c - 1, c, c + 1].filter(v => v >= 0);
+    const row = [c - 1, c, c + 1].filter(v => v >= 0 && v <= 100);
     return { skill: 'nachbar', promptH, segs, body: '<div class="bigpic" style="opacity:.9">🔎</div>', opts: numTiles(numOpts(c, max)), correct: c,
-      hint: async () => { const my = HT; $('#rbody').innerHTML = `<div class="seq ${row.includes(100) ? 'w3' : ''}">${row.map(v => `<div class="sq ${v === c ? 'q' : ''}">${v === c ? '?' : v}</div>`).join('')}</div>`; for (const v of row) { if (my !== HT) return; speak([N(v)]); await sleep(800); if (!$('#rbody')) return; } }, reveal: [N(c)] };
+      hint: async () => { const my = HT; $('#rbody').innerHTML = `<div class="seq ${row.includes(100) ? 'w3' : ''}">${row.map(v => `<div class="sq ${v === c ? 'q' : ''}">${v === c ? '?' : v}</div>`).join('')}</div>`; for (const v of row) { if (my !== HT) return; await speak([N(v)]); await sleep(320); if (!$('#rbody')) return; } }, reveal: [N(c)] };
   },
   zerleg(last) {
     const R = rangeNow(), max = lvMax('zerleg'), lv = sk('zerleg').lv, e = pick(ITEMS); let T, a, tens = false;
@@ -787,7 +927,7 @@ const GEN = {
     const set = [k]; [k - 1, k + 1, k + 2, k - 2, 1, 2, 3, 4].forEach(v => { if (v >= 1 && v <= 5 && !set.includes(v) && set.length < (lv === 1 ? 3 : 4)) set.push(v); });
     return { skill: 'silben', w: w[0], promptH: `Wie viele Silben hat das Wort <b>${esc(w[0])}</b>?`, segs: [P('silben1'), Wd(w[0]), Q], body: `<div class="bigpic">${w[1]}</div>`,
       opts: numTiles(shuffle(set)), correct: k,
-      hint: async () => { const my = HT; $('#rbody').innerHTML = `<div class="stage"><div class="bigpic" style="font-size:clamp(60px,14vmin,150px)">${w[1]}</div><div class="wordhint" id="claps"></div></div>`; await speak([Wd(w[0])]); for (let i = 1; i <= k; i++) { if (my !== HT || !$('#claps')) return; $('#claps').insertAdjacentHTML('beforeend', '<span>👏</span>'); speak([N(i)]); await sleep(800); } }, reveal: [N(k)] };
+      hint: async () => { const my = HT; $('#rbody').innerHTML = `<div class="stage"><div class="bigpic" style="font-size:clamp(60px,14vmin,150px)">${w[1]}</div><div class="wordhint" id="claps"></div></div>`; await speak([Wd(w[0])]); for (let i = 1; i <= k; i++) { if (my !== HT || !$('#claps')) return; $('#claps').insertAdjacentHTML('beforeend', '<span>👏</span>'); await speak([N(i)]); await sleep(320); } }, reveal: [N(k)] };
   },
   find(last) {
     const L = pickLetter(false, last.L); const k = rnd(2, 4);
@@ -838,7 +978,9 @@ app.addEventListener('click', e => {
   const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
   audioUnlock(); const f = ACT[b.dataset.a]; if (f) f(b, e);
 });
-function screen(html) { app.innerHTML = html; app.scrollTop = 0; }
+let screenTimer = null;
+function screen(html) { clearTimeout(screenTimer); stopSpeech(); HT++; app.innerHTML = html; app.scrollTop = 0; }
+function saySoon(delay = 200) { clearTimeout(screenTimer); const say = CUR.say; screenTimer = setTimeout(() => say && say(), delay); }
 const muteBtn = () => `<button class="ico voice ${MUTED ? 'off' : ''}" data-a="mute" aria-label="Vorlesen ein oder aus" aria-pressed="${MUTED}"><span class="vi">${MUTED ? '🤫' : '🗣️'}</span><small>${MUTED ? 'aus' : 'an'}</small></button>`;
 const topbar = (mid = '<span></span>') => `<header class="top"><button class="ico" data-a="home" aria-label="Nach Hause">🏠</button>${mid}<div class="rgt"><button class="ico" data-a="say" aria-label="Nochmal vorlesen" ${MUTED ? 'hidden' : ''}>🔊</button>${muteBtn()}</div></header>`;
 ACT.mute = () => {
@@ -852,7 +994,7 @@ ACT.next = () => { stopSpeech(); HT++; CUR.next && CUR.next(); };
 ACT.home = () => { stopSpeech(); HT++; SES = null; home(); };
 
 function startScreen() {
-  screen(`<header class="top"><span></span>${muteBtn()}</header><div class="center"><div class="bob">${koala('happy')}</div><button class="btn" data-a="begin">▶ Los geht's</button></div>`);
+  screen(`<header class="top"><span></span>${muteBtn()}</header><div class="center"><div class="bob">${koala('happy')}</div><button class="btn" data-a="begin">▶ Los geht's</button><small id="packstatus" role="status">${esc(packStatus)}</small></div>`);
   CUR.say = null;
 }
 ACT.begin = () => {
@@ -871,9 +1013,11 @@ function home(first) {
     <button class="case tr" data-a="train"><span class="cpic">🔍</span><span class="ctitle">Übungsrunde</span><span class="cst">⭐⭐⭐⭐⭐</span></button>
     <button class="case al" data-a="album"><span class="cpic">📒</span><span class="ctitle">Sticker-Album</span><span class="cst">${S.stickers.length} von ${STICKERS.length}</span></button>
   </div></div>`);
-  CUR.say = () => speak([P('hallo'), T(S.name), P('hallo2')]);
-  if (hi) { greeted = true; setTimeout(CUR.say, 300); }
+  CUR.say = () => speak([P('willkommen')]);
+  if (hi) { greeted = true; saySoon(300); }
 }
+
+ACT.audioDownload = () => prepareAudioPack();
 
 /* ---------- Geschichte ---------- */
 function story(lines, i, done, kp) {
@@ -883,7 +1027,7 @@ function story(lines, i, done, kp) {
     <button class="btn" data-a="next">${last ? 'Los!' : '➜'}</button></div>`);
   CUR.say = () => speak([T(l.t, kp + '.' + i)]);
   CUR.next = () => { i + 1 < lines.length ? story(lines, i + 1, done, kp) : done(); };
-  setTimeout(CUR.say, 200);
+  saySoon();
 }
 
 /* ---------- Neuer Buchstabe ---------- */
@@ -899,7 +1043,7 @@ function introLetter(L, cb) {
     <button class="btn" data-a="next">➜</button></div>`);
   CUR.say = () => speak([P('neu'), P('das_ist'), Lt(L), ...(CLIPS.has('s.' + L) ? [Ls(L)] : []), ...(ws[0] ? [P('wie'), Wd(ws[0][0])] : [])]);
   CUR.next = () => { S.intro[L] = 1; save(); cb(); };
-  setTimeout(CUR.say, 200);
+  saySoon();
 }
 ACT.word = b => speak([Wd(b.dataset.w)]);
 
@@ -924,7 +1068,7 @@ function riddle() {
     <main class="riddle"><div class="qrow" id="qrow">${koala('happy', 'sm')}<div class="prompt">${r.promptH}</div></div>
     <div class="rbody" id="rbody">${r.body}</div>${opts}</main>`);
   CUR.say = () => speak(r.segs);
-  setTimeout(CUR.say, 250);
+  saySoon(250);
 }
 function mood(m) { const q = $('#qrow'); if (q) q.innerHTML = koala(m, 'sm') + q.innerHTML.replace(/^<svg[\s\S]*?<\/svg>/, ''); }
 ACT.ans = b => {
@@ -947,16 +1091,16 @@ ACT.cell = b => {
   }
 };
 function wrong(r, b) {
-  sfx('no'); b.classList.add('bad'); mood('oops');
+  sfx('no'); b.classList.add('bad'); b.disabled = true; mood('oops'); const hintToken = ++HT;
   if (r.tries === 0) record(r.skill, false, r.L);
   r.tries++;
   setTimeout(() => { b.classList.remove('bad'); b.disabled = true; mood('happy'); }, 450);
-  if (r.tries === 1) { speak([P('nochmal')]).then(() => { if (SES && SES.cur === r && r.hint && !r.locked) r.hint(); }); }
+  if (r.tries === 1) { speak([P('nochmal')]).then(() => { if (HT === hintToken && SES && SES.cur === r && r.hint && !r.locked) r.hint(); }); }
   else {
     r.locked = true; HT++;
     $$('#opts .tile').forEach(t => { if (String(t.dataset.v) === String(r.correct)) { t.disabled = false; t.classList.add('ok'); } });
-    speak([P('richtig'), ...r.reveal]);
-    const ses = SES; setTimeout(() => { if (SES === ses && ses.cur === r) finishRiddle(r, true); }, 2800);
+    const ses = SES;
+    speak(r.reveal.length ? [P('richtig'), ...r.reveal] : [P('markiert')]).then(() => { if (SES === ses && ses.cur === r) finishRiddle(r, true); });
   }
 }
 function finishRiddle(r, revealed) {
@@ -967,8 +1111,8 @@ function finishRiddle(r, revealed) {
   const d = S.days[today()] || (S.days[today()] = { n: 0, ms: 0 });
   d.n++; d.ms += Math.min(180000, Date.now() - r.t0); S.stars += st; save();
   SES.stars.push(st); sfx('ok'); mood('wow');
-  if (!revealed) speak([P('praise' + rnd(0, 4))]);
-  setTimeout(() => { if (SES === ses && ses.cur === r) afterRiddle(); }, revealed ? 200 : 1500);
+  const praise = !revealed ? speak([P('praise' + rnd(0, 4))]) : Promise.resolve();
+  praise.then(() => setTimeout(() => { if (SES === ses && ses.cur === r) afterRiddle(); }, 350));
 }
 function afterRiddle() {
   if (!SES) return;
@@ -985,18 +1129,20 @@ function clueScreen(ci) {
     <div class="deduce"><span class="dq">🔎</span>${esc(c.so)}</div><button class="btn" data-a="next">➜</button></div>`);
   CUR.say = () => speak([P('hinweis'), T(c.t, 'cl.' + SES.c.id + '.' + ci), T(c.so, 'cs.' + SES.c.id + '.' + ci)]);
   CUR.next = () => { SES.i >= 5 ? who() : riddle(); };
-  setTimeout(CUR.say, 200);
+  saySoon();
 }
 function who() {
   const c = SES.c;
   screen(`${topbar()}<div class="center">${tray(5)}<div class="prompt">Wer war es? Tippe auf das richtige Tier.</div>
     <div class="suspects">${shuffle(c.suspects).map(s => `<button class="susp" data-a="susp" data-id="${s.id}">${s.pic}</button>`).join('')}</div></div>`);
   CUR.say = () => speak([P('wer')]);
-  setTimeout(CUR.say, 200);
+  saySoon();
 }
 ACT.susp = b => {
+  if (!SES || SES.solved) return;
   const c = SES.c, s = c.suspects.find(x => x.id === b.dataset.id);
   if (s.id === c.culprit) {
+    SES.solved = true; stopSpeech();
     b.classList.add('ok'); sfx('win'); confetti();
     const ses = SES; setTimeout(() => { if (SES === ses) story(c.outro, 0, reward, 'st.' + c.id + '.out'); }, 1800);
   } else { b.classList.add('bad'); sfx('no'); setTimeout(() => b.classList.remove('bad'), 450); speak([T(s.no, 'sp.' + c.id + '.' + s.id)]); }
@@ -1009,12 +1155,12 @@ function reward() {
   const got = free.length ? pick(free) : null; if (got !== null) S.stickers.push(got);
   save(); sfx('win'); confetti();
   const st = got !== null ? STICKERS[got] : null;
-  screen(`<header class="top"><span></span><span></span></header><div class="center">
+  screen(`${topbar()}<div class="center">
     <div class="bubble">${SES.kind === 'case' ? 'Fall gelöst!' : 'Übungsrunde geschafft!'}<br>${'⭐'.repeat(rating)}${'☆'.repeat(3 - rating)}</div>
     ${st ? `<div class="stk" style="width:clamp(120px,26vmin,240px);font-size:clamp(70px,16vmin,150px)">${st[1]}</div>` : ''}
     <div class="stage"><button class="btn" data-a="home">🏠 Weiter</button><button class="btn rose" data-a="album">📒 Album</button></div></div>`);
   const kind = SES.kind; CUR.say = () => speak([P(kind === 'case' ? 'geschafft' : 'runde'), ...(st ? [P('sticker')] : [])]);
-  setTimeout(CUR.say, 300);
+  saySoon(300);
 }
 ACT.album = () => {
   stopSpeech(); sfx('tap');
@@ -1040,7 +1186,7 @@ function confetti() {
 /* ================= Elternbereich ================= */
 let GATE = null, PTAB = 'letters';
 ACT.parent = () => {
-  stopSpeech(); const a = rnd(6, 9), b = rnd(6, 9); GATE = { ans: String(a * b), v: '', a, b }; gate();
+  SES = null; stopSpeech(); const a = rnd(6, 9), b = rnd(6, 9); GATE = { ans: String(a * b), v: '', a, b }; gate();
 };
 function gate() {
   screen(`<header class="top"><button class="ico" data-a="home">🏠</button><span></span><span style="width:64px"></span></header>
@@ -1093,7 +1239,11 @@ const PT = {
   voice() {
     const vs = deVoices();
     return `<h2>Stimme und Ton</h2>
-    <p><button class="btn sm" data-a="vtest">🔊 Stimme testen</button></p>
+    <p>Ela liest alle Fälle und Aufgaben vor: Mono · 22,05 kHz · 128 kbit/s. Eigene Aufnahmen haben Vorrang. Der Name bleibt in der Begrüßung sichtbar; Ela spricht eine gemeinsame Begrüßung.</p>
+    <div class="note" id="packstatus" role="status">${esc(packStatus)}</div>
+    <p><button class="btn sm ghost" data-a="audioDownload">Offline-Paket prüfen / laden</button></p>
+    <p>Die folgenden Einstellungen betreffen nur die Ersatz-Gerätestimme, falls eine Aufnahme nicht abgespielt werden kann.</p>
+    <p><button class="btn sm" data-a="vtest">🔊 Ersatz-Gerätestimme anhören</button></p>
     <p><label for="vsel"><b>Stimme</b></label>${vs.length ? `<select id="vsel" data-c="voice"><option value="">Automatisch (beste Stimme)</option>${vs.map(v => `<option ${v.name === S.set.voice ? 'selected' : ''} value="${esc(v.name)}">${esc(v.name)} (${esc(v.lang)})</option>`).join('')}</select>` : '<br>Auf diesem Gerät wurde keine deutsche Stimme gefunden.'}</p>
     <p><label for="vrate"><b>Sprechtempo</b></label><input id="vrate" type="range" min="0.6" max="1.1" step="0.05" value="${S.set.rate}" data-c="rate" style="width:100%"></p>
     <p><button class="tab ${S.set.speak ? 'on' : ''}" data-a="tgl" data-k="speak">Vorlesen: ${S.set.speak ? 'an' : 'aus'}</button> <button class="tab ${S.set.sfx ? 'on' : ''}" data-a="tgl" data-k="sfx">Klänge: ${S.set.sfx ? 'an' : 'aus'}</button></p>
@@ -1102,7 +1252,7 @@ const PT = {
   rec() {
     const groups = recGroups();
     return `<h2>Aufnahmen mit deiner Stimme</h2>
-    <p>Jede Zeile ist ein Baustein, den das Spiel vorliest. Was du einsprichst, ersetzt die iPad-Stimme. Alles andere bleibt bei der iPad-Stimme. Aufnahmen bleiben nur auf diesem Gerät.</p>
+    <p>Jede Zeile ist ein Baustein, den das Spiel vorliest. Deine Aufnahme hat Vorrang vor Ela und der Gerätestimme. Nach dem Löschen wird wieder Ela verwendet, sofern der Baustein mitgeliefert ist. Aufnahmen bleiben nur auf diesem Gerät.</p>
     <div class="note warn" id="recmsg">Wenn das Mikrofon hier gesperrt ist: Sprachmemo aufnehmen, in „Dateien“ sichern und mit 📁 laden. Buchstaben-Laute (zum Beispiel „mmm“) gehen nur mit eigener Aufnahme.</div>
     ${groups.map(g => `<details><summary style="font-weight:800;padding:10px 0;min-height:44px">${esc(g.cat)} (${g.items.length})</summary>${g.items.map(recRow).join('')}</details>`).join('')}`;
   },
@@ -1174,13 +1324,13 @@ function recGroups() {
 }
 function recRow(it) {
   const has = CLIPS.has(it.k);
-  return `<div class="row" data-k="${esc(it.k)}"><span class="lbl">${esc(it.t)}</span><span class="st">${has ? 'Eigene Aufnahme ✓' : it.say ? 'iPad-Stimme' : 'keine'}</span>
+  return `<div class="row" data-k="${esc(it.k)}"><span class="lbl">${esc(it.t)}</span><span class="st">${has ? 'Eigene Aufnahme ✓' : BUNDLED.has(it.k) ? 'Ela ✓' : it.say ? 'iPad-Stimme' : 'keine'}</span>
   <button class="mini" data-a="rplay" data-k="${esc(it.k)}" data-s="${esc(it.say)}" aria-label="Anhören">▶</button>
   <button class="mini" data-a="rrec" data-k="${esc(it.k)}" aria-label="Aufnehmen">●</button>
   <button class="mini" data-a="rdel" data-k="${esc(it.k)}" data-s="${esc(it.say)}" aria-label="Aufnahme löschen">🗑</button>
   <label class="mini" style="display:grid;place-items:center;cursor:pointer" aria-label="Datei laden">📁<input type="file" accept="audio/*" hidden data-k="${esc(it.k)}"></label></div>`;
 }
-function markRow(row, k) { const st = $('.st', row); if (st) st.textContent = CLIPS.has(k) ? 'Eigene Aufnahme ✓' : (row.querySelector('[data-s]').dataset.s ? 'iPad-Stimme' : 'keine'); }
+function markRow(row, k) { const st = $('.st', row); if (st) st.textContent = CLIPS.has(k) ? 'Eigene Aufnahme ✓' : BUNDLED.has(k) ? 'Ela ✓' : (row.querySelector('[data-s]').dataset.s ? 'iPad-Stimme' : 'keine'); }
 ACT.rplay = b => speak([{ k: b.dataset.k, t: b.dataset.s }], true);
 ACT.rdel = b => { clipDel(b.dataset.k); markRow(b.closest('.row'), b.dataset.k); };
 let REC = null;
@@ -1207,11 +1357,18 @@ ACT.rrec = async b => {
 
 /* ================= Start ================= */
 loadState();
-idbOpen().then(idbAll);
+const recordingsReady = idbOpen().then(idbAll);
+const audioReady = loadAudioPack();
 startScreen();
+if (AUDIO_PACK.standalone) prepareAudioPack();
 window.__game = { S: () => S, SES: () => SES, ACT, CLIPS };
 
-if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => { /* ohne Offline-Funktion weiterspielen */ }));
+if (!AUDIO_PACK.standalone && 'serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => prepareAudioPack());
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js' + (AUDIO_PACK.webVersion ? '?v=' + AUDIO_PACK.webVersion : '')).then(() => prepareAudioPack()).catch(() => {
+    showPackStatus('Online spielbar. Offline-Webseite konnte nicht eingerichtet werden.');
+  }));
+}
 </script>
 </body>
 </html>

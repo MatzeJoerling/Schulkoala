@@ -1,0 +1,421 @@
+{
+  "version": 2,
+  "voice_id": "NE7AIW5DoJ7lUosXV2KR",
+  "voice_name": "Ela - Cheerful and Happy",
+  "model_id": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_128",
+  "encoding": {
+    "sample_rate": 22050,
+    "channels": 1,
+    "bit_rate": 128000
+  },
+  "voice_settings": {
+    "stability": 0.75,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 0.8
+  },
+  "playback_gain": 0.7,
+  "clips": [
+    {
+      "key": "ph.wieviele",
+      "text": "Zähle mal: Wie viele siehst du?",
+      "file": "ph.wieviele.mp3",
+      "fingerprint": "6427c9751def465f8e2924439d5ad3661e458e5fa954491aaf138cdc6b1a9c01"
+    },
+    {
+      "key": "ph.plus",
+      "text": "plus",
+      "file": "ph.plus.mp3",
+      "fingerprint": "cbad5e92a091ce176b0ecc2cc606fff9e4a5ff71a8593ab1e5e1363dba172105"
+    },
+    {
+      "key": "ph.wie_viel_ist",
+      "text": "Wie viel ist",
+      "file": "ph.wie_viel_ist.mp3",
+      "fingerprint": "afb99520d21016e45aac2f5aa33827fc8ff18267c328348fa338d42d5f9354a5"
+    },
+    {
+      "key": "ph.nochmal",
+      "text": "Nicht ganz. Schau noch einmal genau hin und versuche es nochmal!",
+      "file": "ph.nochmal.mp3",
+      "fingerprint": "d2dfc376b338736156bfb6a0ceed19d9a50d0d7673b9da0035a8b2edf67c1c01"
+    },
+    {
+      "key": "ph.wer",
+      "text": "Schau dir alle Hinweise an. Wer war es? Tippe auf das richtige Tier.",
+      "file": "ph.wer.mp3",
+      "fingerprint": "9cb55b1b0f5ee7950d0b22265e058a0b4a58ad9a453253f1195c2c303f562cb2"
+    },
+    {
+      "key": "ph.praise0",
+      "text": "Super!",
+      "file": "ph.praise0.mp3",
+      "fingerprint": "5225626aa763e1c2bf06f780205f4da5a20b799d715e6363f193992b81ad5695"
+    },
+    {
+      "key": "ph.praise1",
+      "text": "Toll gemacht!",
+      "file": "ph.praise1.mp3",
+      "fingerprint": "b81503c590726bee63d4e1e33034e41bad952ee0e294f82f78c026f9322d048e"
+    },
+    {
+      "key": "ph.praise2",
+      "text": "Prima!",
+      "file": "ph.praise2.mp3",
+      "fingerprint": "c34a5454dfdac8739382d2f8a33171f8991e6b515948061814c203ceebbb1f6d"
+    },
+    {
+      "key": "ph.praise3",
+      "text": "Genau richtig!",
+      "file": "ph.praise3.mp3",
+      "fingerprint": "69df542681bcd9ac933e9789ce2dbef954d4c6aeb9ed9dc78a007cb32a1614f1"
+    },
+    {
+      "key": "ph.praise4",
+      "text": "Klasse!",
+      "file": "ph.praise4.mp3",
+      "fingerprint": "3ea9075e1e862607d8957f64ebcff0c00df189f647a35e2c91afd6596c791a3d"
+    },
+    {
+      "key": "n.1",
+      "text": "eins",
+      "file": "n.1.mp3",
+      "fingerprint": "371061556fa7b71186f54a22e867bcd29e8fc928049f0c1e5a845d6f1aaa3f80"
+    },
+    {
+      "key": "n.2",
+      "text": "zwei",
+      "file": "n.2.mp3",
+      "fingerprint": "0445de81bf4ec71bffd6472d68366f277ebef51d59bcfc8548f3eebac99561f2"
+    },
+    {
+      "key": "n.3",
+      "text": "drei",
+      "file": "n.3.mp3",
+      "fingerprint": "d894bc26607e8cc404c5f596757c078f8a1c3db66ea1a9da88a90d5261d92faf"
+    },
+    {
+      "key": "n.4",
+      "text": "vier",
+      "file": "n.4.mp3",
+      "fingerprint": "f87dda998967c6f6fb974a6bbee90e7084f95c4aa3506241c1ed451832ad233f"
+    },
+    {
+      "key": "n.5",
+      "text": "fünf",
+      "file": "n.5.mp3",
+      "fingerprint": "29891f7363a2b093c7580ed2250d46d95c34b6114214163858cda64b5d455815"
+    },
+    {
+      "key": "fo.kreis",
+      "text": "Tippe auf den Kreis.",
+      "file": "fo.kreis.mp3",
+      "fingerprint": "76b0ddc76c4ec54f24ffa2fa3e19971ff2e907e696b28f9f98d22365a2bca5bd"
+    },
+    {
+      "key": "w.kreis",
+      "text": "Kreis",
+      "file": "w.kreis.mp3",
+      "fingerprint": "097208ac7d2c9f5a77b95e07aa89a3c6b8e7781b3938b1c77abbe0ed0cf6ebe0"
+    },
+    {
+      "key": "l.A",
+      "text": "A",
+      "file": "l.A.mp3",
+      "fingerprint": "1d7eb09e8ad10afd24b71c638d75a5249d241f21107211ec70f4159266e06d88"
+    },
+    {
+      "key": "w.affe",
+      "text": "Affe",
+      "file": "w.affe.mp3",
+      "fingerprint": "31b4cd77b4064e95772786b7a57572bf1d729d2282e734972dd1b5495afe4ea3"
+    },
+    {
+      "key": "w.apfel",
+      "text": "Apfel",
+      "file": "w.apfel.mp3",
+      "fingerprint": "f0abea7d7db124292937b35ebd09e4339141d77efb1d16be46095d862519d800"
+    },
+    {
+      "key": "w.ameise",
+      "text": "Ameise",
+      "file": "w.ameise.mp3",
+      "fingerprint": "dd4e1d74514fbec08236075a711bed13f6783283af82b2884c5683de4696b1a3"
+    },
+    {
+      "key": "w.dino",
+      "text": "Dino",
+      "file": "w.dino.mp3",
+      "fingerprint": "5b8ebad217e4e30400497c8866e4583e5b4ae4bc985bcd40406f9b6a7c3d6f51"
+    },
+    {
+      "key": "w.koala",
+      "text": "Koala",
+      "file": "w.koala.mp3",
+      "fingerprint": "2e67267282095c3ad260a8ebba6173bfe667d298f942d8ad05e8d7d72ec7290b"
+    },
+    {
+      "key": "st.c1.in.0",
+      "text": "Oh nein! Im Dino-Park ist das Dino-Ei verschwunden!",
+      "file": "st.c1.in.0.mp3",
+      "fingerprint": "1b9c117e92960450c1cd3dd2e07745c1190b8a8e87b48c0e2daa444f99a1d512"
+    },
+    {
+      "key": "st.c1.in.1",
+      "text": "Kommst du mit? Wir sind die Koala-Detektei und suchen Hinweise!",
+      "file": "st.c1.in.1.mp3",
+      "fingerprint": "a9717e17104b46837325d0ee245a09869775ab7939600b0df599b76466c5e02f"
+    },
+    {
+      "key": "sp.c1.pinguin",
+      "text": "Ein Pinguin kann nicht auf einen Baum fliegen.",
+      "file": "sp.c1.pinguin.mp3",
+      "fingerprint": "18c3a4e58702250055de011c28255d21e7498d686c0a1610340c20691980482d"
+    },
+    {
+      "key": "sp.c1.maus",
+      "text": "Eine Maus hat keine Federn.",
+      "file": "sp.c1.maus.mp3",
+      "fingerprint": "a97b2795530fe8bae601625e09e4ec9722e2bc475392a39fb18ff3f104e0f09f"
+    },
+    {
+      "key": "st.c1.out.0",
+      "text": "Der Papagei war es! Er hat das Ei nur warm gehalten, weil es so kalt war.",
+      "file": "st.c1.out.0.mp3",
+      "fingerprint": "48927ebc0a8ca103a139ffa3b2c743a2f0334a118aa76b9102a1cbb0e84f8896"
+    },
+    {
+      "key": "st.c1.out.1",
+      "text": "Das Dino-Ei ist wieder da. Toll gemacht, Detektivin!",
+      "file": "st.c1.out.1.mp3",
+      "fingerprint": "075b887948cc4949fc6fcf6f3dde975a3901915214848cc8611c57e3fde306db"
+    },
+    {
+      "key": "demo.satz",
+      "text": "Wie viel ist drei plus zwei?",
+      "file": "demo.satz.mp3",
+      "replaces": [
+        "ph.wie_viel_ist",
+        "n.3",
+        "ph.plus",
+        "n.2",
+        "?"
+      ],
+      "fingerprint": "cceb3dda73c1c74aee6d22f7edb4fad16c2e3dd28a6f4ee20e48f67b8cb6b581"
+    },
+    {
+      "key": "sentence.intro.A",
+      "text": "Schau mal, ein neuer Buchstabe! Das ist das A wie Affe.",
+      "file": "sentence.intro.A.mp3",
+      "replaces": [
+        "ph.neu",
+        "ph.das_ist",
+        "l.A",
+        "ph.wie",
+        "w.affe"
+      ],
+      "fingerprint": "f6757e3989c239ecf640cd7c180f8786a9dc9791a5a43dc7085785f70edcea93"
+    },
+    {
+      "key": "sentence.tippe.A",
+      "text": "Tippe auf den Buchstaben A.",
+      "file": "sentence.tippe.A.mp3",
+      "replaces": [
+        "ph.tippe_buchstabe",
+        "l.A"
+      ],
+      "fingerprint": "00e14bcfc47ccebf7205ecdffc6f97a7c961dfb0675ac4909067340910f538c7"
+    },
+    {
+      "key": "sentence.anlaut.apfel",
+      "text": "Mit welchem Buchstaben fängt Apfel an?",
+      "file": "sentence.anlaut.apfel.mp3",
+      "replaces": [
+        "ph.womit",
+        "w.apfel",
+        "ph.an"
+      ],
+      "fingerprint": "d268e5040d09cfbb0263c4c47fe5f44748a2ea72260b142e31b4cdeb46f2f147"
+    },
+    {
+      "key": "sentence.hilfe.A",
+      "text": "Das ist das A wie Apfel.",
+      "file": "sentence.hilfe.A.mp3",
+      "replaces": [
+        "ph.das_ist",
+        "l.A",
+        "ph.wie",
+        "w.apfel"
+      ],
+      "fingerprint": "673fc171e1cb7bf141e4eb9ac29e1fb5111ddd26a592717556c1d4bf91f29ba7"
+    },
+    {
+      "key": "sentence.hilfe.apfel",
+      "text": "Apfel fängt an mit dem A.",
+      "file": "sentence.hilfe.apfel.mp3",
+      "replaces": [
+        "w.apfel",
+        "ph.faengt_mit",
+        "l.A"
+      ],
+      "fingerprint": "daf2ba302a3a923f97bd6b9f0a1b740f891dc72fde62de026fd751de7f5c7c74"
+    },
+    {
+      "key": "sentence.richtig.n.3",
+      "text": "Die richtige Antwort ist drei.",
+      "file": "sentence.richtig.n.3.mp3",
+      "replaces": [
+        "ph.richtig",
+        "n.3"
+      ],
+      "fingerprint": "dd49052c6b0d6ace401bde7ae7055db3916564997be2e4d1063cffaa0c356f93"
+    },
+    {
+      "key": "sentence.richtig.n.5",
+      "text": "Die richtige Antwort ist fünf.",
+      "file": "sentence.richtig.n.5.mp3",
+      "replaces": [
+        "ph.richtig",
+        "n.5"
+      ],
+      "fingerprint": "7f4fbd88581165258475694b1fae036569e04243288da34f94e9d80abe294d84"
+    },
+    {
+      "key": "sentence.richtig.l.A",
+      "text": "Die richtige Antwort ist A.",
+      "file": "sentence.richtig.l.A.mp3",
+      "replaces": [
+        "ph.richtig",
+        "l.A"
+      ],
+      "fingerprint": "3d8637654683298f87f4e570888a15cd47355a3299c7f6b0437613c30ffa8656"
+    },
+    {
+      "key": "sentence.richtig.w.kreis",
+      "text": "Die richtige Antwort ist Kreis.",
+      "file": "sentence.richtig.w.kreis.mp3",
+      "replaces": [
+        "ph.richtig",
+        "w.kreis"
+      ],
+      "fingerprint": "ad5ff32722a7b23f10dae6b441b27e3ef68ef430e89e29096580f78970b21df1"
+    },
+    {
+      "key": "sentence.belohnung",
+      "text": "Geschafft! Du hast den Fall gelöst! Du hast einen neuen Sticker bekommen!",
+      "file": "sentence.belohnung.mp3",
+      "replaces": [
+        "ph.geschafft",
+        "ph.sticker"
+      ],
+      "fingerprint": "6cda7e14587e6e5c35518b2eeaf68ad9f3826e712aa796d009a76c30ff93a053"
+    },
+    {
+      "key": "sentence.clue.c1.0",
+      "text": "Du hast einen Hinweis gefunden! Hier liegt eine Feder! Der Dieb, der das Ei geklaut hat, hat also Federn.",
+      "file": "sentence.clue.c1.0.mp3",
+      "replaces": [
+        "ph.hinweis",
+        "cl.c1.0",
+        "cs.c1.0"
+      ],
+      "fingerprint": "a56b9435be01c4fc9fa2b04f97ad4807ee2e6d2b37d74b9b0dc1670ca081d59b"
+    },
+    {
+      "key": "sentence.review.c1.0",
+      "text": "Hier liegt eine Feder! Der Dieb, der das Ei geklaut hat, hat also Federn.",
+      "file": "sentence.review.c1.0.mp3",
+      "replaces": [
+        "cl.c1.0",
+        "cs.c1.0"
+      ],
+      "fingerprint": "1cb8a705a906bb4ce156e6241ff44fdd7e9d4c23a3e3e31a5b04f2af68522fbe"
+    },
+    {
+      "key": "sentence.clue.c1.1",
+      "text": "Du hast einen Hinweis gefunden! Die Spuren enden hoch oben im Baum. Der Dieb kann also fliegen oder klettern. Er ist hoch oben im Baum.",
+      "file": "sentence.clue.c1.1.mp3",
+      "replaces": [
+        "ph.hinweis",
+        "cl.c1.1",
+        "cs.c1.1"
+      ],
+      "fingerprint": "d3007236970a582f9b049ce6c0570c2eb6a1965e2ceaac69501c41988d612067"
+    },
+    {
+      "key": "sentence.review.c1.1",
+      "text": "Die Spuren enden hoch oben im Baum. Der Dieb kann also fliegen oder klettern. Er ist hoch oben im Baum.",
+      "file": "sentence.review.c1.1.mp3",
+      "replaces": [
+        "cl.c1.1",
+        "cs.c1.1"
+      ],
+      "fingerprint": "5f768f705f67f7dcfcf91badd46e94e523609420b6d0ba1f9455b3d19ba5caf4"
+    },
+    {
+      "key": "sentence.clue.c1.2",
+      "text": "Du hast einen Hinweis gefunden! Jemand hat Nuss-Krümel fallen lassen. Der Dieb mag also Nüsse.",
+      "file": "sentence.clue.c1.2.mp3",
+      "replaces": [
+        "ph.hinweis",
+        "cl.c1.2",
+        "cs.c1.2"
+      ],
+      "fingerprint": "852e87f73854cd15123b2cce3c38a8092d10bc5d87a6ff1ccd378556c7391fa7"
+    },
+    {
+      "key": "sentence.review.c1.2",
+      "text": "Jemand hat Nuss-Krümel fallen lassen. Der Dieb mag also Nüsse.",
+      "file": "sentence.review.c1.2.mp3",
+      "replaces": [
+        "cl.c1.2",
+        "cs.c1.2"
+      ],
+      "fingerprint": "824f4407cfacfaf16cd771ff0ce6d04f727063f35df8e1a9e3faf0057abbbf54"
+    },
+    {
+      "key": "sentence.clue.c1.3",
+      "text": "Du hast einen Hinweis gefunden! Und da ruft jemand: Hallo, Hallo! Der Dieb kann also sprechen!",
+      "file": "sentence.clue.c1.3.mp3",
+      "replaces": [
+        "ph.hinweis",
+        "cl.c1.3",
+        "cs.c1.3"
+      ],
+      "fingerprint": "5ffe638cff0e2e4818bee2942c9e3add796ca554647bc19c82615962534197ee"
+    },
+    {
+      "key": "sentence.review.c1.3",
+      "text": "Und da ruft jemand: Hallo, Hallo! Der Dieb kann also sprechen!",
+      "file": "sentence.review.c1.3.mp3",
+      "replaces": [
+        "cl.c1.3",
+        "cs.c1.3"
+      ],
+      "fingerprint": "cdde25f73d51321c4df33438348f05b07119720521da1f253d9c0592e0836250"
+    },
+    {
+      "key": "sentence.clue.c1.4",
+      "text": "Du hast einen Hinweis gefunden! Das Ei liegt warm zugedeckt mit Blättern. Der Dieb wollte das Ei also warm halten. Er hat es nicht böse gemeint.",
+      "file": "sentence.clue.c1.4.mp3",
+      "replaces": [
+        "ph.hinweis",
+        "cl.c1.4",
+        "cs.c1.4"
+      ],
+      "fingerprint": "bdd364851667b06c0be823220a8ea1a3c67a78e4334e4800fda53ec64b8edc8a"
+    },
+    {
+      "key": "sentence.review.c1.4",
+      "text": "Das Ei liegt warm zugedeckt mit Blättern. Der Dieb wollte das Ei also warm halten. Er hat es nicht böse gemeint.",
+      "file": "sentence.review.c1.4.mp3",
+      "replaces": [
+        "cl.c1.4",
+        "cs.c1.4"
+      ],
+      "fingerprint": "20943a85deaaa7aa39e44042017468e4c7eec25a9e1f2171a51acef4296c84e1"
+    }
+  ]
+}

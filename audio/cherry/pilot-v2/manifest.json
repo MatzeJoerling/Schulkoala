@@ -1,0 +1,536 @@
+{
+  "version": 2,
+  "voice_id": "XJ2fW4ybq7HouelYYGcL",
+  "voice_name": "Cherry Twinkle - Bubbly and Sweet",
+  "model_id": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_128",
+  "encoding": {
+    "sample_rate": 22050,
+    "channels": 1,
+    "bit_rate": 128000
+  },
+  "voice_settings": {
+    "stability": 0.75,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 0.8
+  },
+  "playback_gain": 0.7,
+  "clips": [
+    {
+      "key": "ph.wieviele",
+      "text": "Zähle mal: Wie viele siehst du?",
+      "file": "ph.wieviele.mp3",
+      "fingerprint": "9091f4bb7731e693e3b78ddaf3967dccca12d3d66ea650e617af21c77d597c2d",
+      "bytes": 52706,
+      "duration": 3.265306,
+      "sha256": "5365c6ad283700d1a8780ef038120e5b3b212572e72bebbeea38a7610d4cab43"
+    },
+    {
+      "key": "ph.plus",
+      "text": "plus",
+      "file": "ph.plus.mp3",
+      "fingerprint": "0417fbaf8c0c5552521943da153706f3dee577f48ff6d668c5278460354999fb",
+      "bytes": 18434,
+      "duration": 1.123265,
+      "sha256": "de3657a05f18f25e63fa408b3b3735f219a2c45c21a81155b8aceb8e1c919fa1"
+    },
+    {
+      "key": "ph.wie_viel_ist",
+      "text": "Wie viel ist",
+      "file": "ph.wie_viel_ist.mp3",
+      "fingerprint": "12b00fe5aa383d5ed9adc406f6a6648a5df2eeff5a5dc89a302c07c0e8b11983",
+      "bytes": 23867,
+      "duration": 1.462857,
+      "sha256": "769ab70dbb54d738dd7c60ad9fb1c203f21a8ad8f64c1ff29254f5c71407ca83"
+    },
+    {
+      "key": "ph.nochmal",
+      "text": "Nicht ganz. Schau noch einmal genau hin und versuche es nochmal!",
+      "file": "ph.nochmal.mp3",
+      "fingerprint": "4730c8c2ca0d86947025248edc987c0cf6bf307db67907400b3ccb0e86cb449f",
+      "bytes": 105369,
+      "duration": 6.556735,
+      "sha256": "0c56a2df3e21b7bd415fce7c008059af8634befd7dc963f42fdf1d5fcb041675"
+    },
+    {
+      "key": "ph.wer",
+      "text": "Schau dir alle Hinweise an. Wer war es? Tippe auf das richtige Tier.",
+      "file": "ph.wer.mp3",
+      "fingerprint": "9328e9a5b6e160752502510c203d016e8e03ff6fe2aee5d93ee49289f83805c5",
+      "bytes": 111639,
+      "duration": 6.948571,
+      "sha256": "c6a1b07c84dda8756567b7fccdaddc7fdce243df2de2bb9cae74743ad0dbe044"
+    },
+    {
+      "key": "ph.hinweis",
+      "text": "Du hast einen Hinweis gefunden!",
+      "file": "ph.hinweis.mp3",
+      "fingerprint": "97df883a7ed2f7493d9c00d40b8b3f7cae204f974cb574411b32ae03f092b9cb",
+      "bytes": 41004,
+      "duration": 2.533878,
+      "sha256": "fa765319553f1895461e7b992996c1f94bfcadc46cf2aa439a58a754a4d3fca7"
+    },
+    {
+      "key": "ph.praise0",
+      "text": "Super!",
+      "file": "ph.praise0.mp3",
+      "fingerprint": "a8119ed98d2752ce7f6eb83d440f1350f268211075fcaf5702ba63000694027f",
+      "bytes": 21359,
+      "duration": 1.306122,
+      "sha256": "82fb837e59a4b4a45dc61e5fbc02d79ed11e7ec66f422857ae0e027eb17c6676"
+    },
+    {
+      "key": "ph.praise1",
+      "text": "Toll gemacht!",
+      "file": "ph.praise1.mp3",
+      "fingerprint": "0efa88ea4a865b60dc56bbcc764b6c280feec5ea411612146a9807e2357ec86e",
+      "bytes": 27629,
+      "duration": 1.697959,
+      "sha256": "8a54bd25507f34690971ce1ccfbc5e4f2442354e09f1eaa29bce9f9cb65843d9"
+    },
+    {
+      "key": "ph.praise2",
+      "text": "Prima!",
+      "file": "ph.praise2.mp3",
+      "fingerprint": "4991c65bcca50197f9f43221cee03ff802787943fa9cbdb57d8bb5ea858f5085",
+      "bytes": 20942,
+      "duration": 1.28,
+      "sha256": "59104261efad250d91352109e9413a18e8250327abd55d3371a30fa0b9c183db"
+    },
+    {
+      "key": "ph.praise3",
+      "text": "Genau richtig!",
+      "file": "ph.praise3.mp3",
+      "fingerprint": "5fd9a1716b2910e2c35668eda1362d6c26dc98f26f3128054b09f9870c5457b1",
+      "bytes": 33480,
+      "duration": 2.063673,
+      "sha256": "fc084007d07f01be71454f0be1a3b70c97937d065a0081cc1c5237a7bf7b502b"
+    },
+    {
+      "key": "ph.praise4",
+      "text": "Klasse!",
+      "file": "ph.praise4.mp3",
+      "fingerprint": "e66996c7c13ce84fbd098f3ef8428bd4d666512643d41385198592ca938db140",
+      "bytes": 20942,
+      "duration": 1.28,
+      "sha256": "ba63caef8220381d47625bff779535cd9b290815a2b79cc0d1ccb9d88f3f44d1"
+    },
+    {
+      "key": "n.1",
+      "text": "eins",
+      "file": "n.1.mp3",
+      "fingerprint": "3db31b1d313545985ad68a6c7ef1ad1a539cd007f062a42508fcd890fa7b292b",
+      "bytes": 15508,
+      "duration": 0.940408,
+      "sha256": "feba7f4ba5b6206e70f437b41d6f0e2b6b4cbe7efa6f9c28289c68d2fc803363"
+    },
+    {
+      "key": "n.2",
+      "text": "zwei",
+      "file": "n.2.mp3",
+      "fingerprint": "ec41a5f5400073879ca0afeadd3e5d6d78a75e722e30739568f5145a2c79297a",
+      "bytes": 20106,
+      "duration": 1.227755,
+      "sha256": "bc47b4afe61adef13becb34ca0b409a77efa55412d355ddcedfd5d5fc371b396"
+    },
+    {
+      "key": "n.3",
+      "text": "drei",
+      "file": "n.3.mp3",
+      "fingerprint": "9ddad3df016a6897ff72ec78e17248f134d836ad831e0c90e6c656ddd6286f2d",
+      "bytes": 20106,
+      "duration": 1.227755,
+      "sha256": "ed067761c0136ae8ce043a572b67b6f362eb6628674143205fe9f61421d7aa9e"
+    },
+    {
+      "key": "n.4",
+      "text": "vier",
+      "file": "n.4.mp3",
+      "fingerprint": "b0c61d8732085d17515c428d5730f47046e96f6706e1bdfe9180d7bcc3c1b6c7",
+      "bytes": 18434,
+      "duration": 1.123265,
+      "sha256": "9525eba51fe18e523764be251a9a7f5e7995131d4669add33af691bd91036f7a"
+    },
+    {
+      "key": "n.5",
+      "text": "fünf",
+      "file": "n.5.mp3",
+      "fingerprint": "8072334e119bc9664ff335a66a4618f82da88ee743d96a2f6e1d4d652d9fe99a",
+      "bytes": 19270,
+      "duration": 1.17551,
+      "sha256": "951e2454bfe7fbbfa8e1ab44fc6711179b2fc26562199d060a05202809c6705c"
+    },
+    {
+      "key": "fo.kreis",
+      "text": "Tippe auf den Kreis.",
+      "file": "fo.kreis.mp3",
+      "fingerprint": "e7da6540f5816b3daeb117b07d14ca5ab56afba3049b39536cd726811e4001be",
+      "bytes": 30555,
+      "duration": 1.880816,
+      "sha256": "e2feb76f7f5e3187b4d7563b8160e870a13cd4f4417ec43d6bb808891e8f48a8"
+    },
+    {
+      "key": "w.kreis",
+      "text": "Kreis",
+      "file": "w.kreis.mp3",
+      "fingerprint": "90580562fe5871a1e118decbb6b385787bc950602f0eb21950f73fea27ff3dd5",
+      "bytes": 19270,
+      "duration": 1.17551,
+      "sha256": "2c3416e0a2b937a8485c22418515c0e212556b71006d381dbec88e5a548da6a6"
+    },
+    {
+      "key": "l.A",
+      "text": "A",
+      "file": "l.A.mp3",
+      "fingerprint": "cc88149b0bbdab5a6655fc4145f58bb0034f1cdc5c660f42d055c3f8cb19a072",
+      "bytes": 13418,
+      "duration": 0.809796,
+      "sha256": "91ccef20b784fa5fc9479d3681cd9cb9415f5e416aeb8e9e5ad5318e32e1e47c"
+    },
+    {
+      "key": "w.affe",
+      "text": "Affe",
+      "file": "w.affe.mp3",
+      "fingerprint": "ba32fb5aa7157ad8a2afb5d5d05bf48d443148287d6594314c96cfda447cce24",
+      "bytes": 19270,
+      "duration": 1.17551,
+      "sha256": "d3827159f6fab0142cd53e845351036d1c2a874934f125c0f2388574da557ed2"
+    },
+    {
+      "key": "w.apfel",
+      "text": "Apfel",
+      "file": "w.apfel.mp3",
+      "fingerprint": "2fa096daa90d032f9742132d1b7fec45c3d046f2eef451a2d43522821fccb65d",
+      "bytes": 20942,
+      "duration": 1.28,
+      "sha256": "4c8f4836b0d9024fde5cd021e9534a406346236cab7be5fa4d7c14602ec941d8"
+    },
+    {
+      "key": "w.ameise",
+      "text": "Ameise",
+      "file": "w.ameise.mp3",
+      "fingerprint": "2b9dc8eb108dd25271d52b49606c9a95b67859b4e18e6aa434fe8be78087176c",
+      "bytes": 21359,
+      "duration": 1.306122,
+      "sha256": "9e002f9454a2bcb9fe087d4c225bde216a151430fbbe5a822a329e6ceee0ac14"
+    },
+    {
+      "key": "w.dino",
+      "text": "Dino",
+      "file": "w.dino.mp3",
+      "fingerprint": "f9363f0e03a30d528e0b19febc00032f26169137578a50f6e47bc183360b0214",
+      "bytes": 19270,
+      "duration": 1.17551,
+      "sha256": "32a56dde87b06dd0dce1d22147b24a0991d8f7f4fac2cea6d5ccc9e8ab106cef"
+    },
+    {
+      "key": "w.koala",
+      "text": "Koala",
+      "file": "w.koala.mp3",
+      "fingerprint": "63aedccab6a7b36e27abd0781fe3fa06cc1f685253fcbfb874063b0bc39dba04",
+      "bytes": 19270,
+      "duration": 1.17551,
+      "sha256": "251a5898627162ab327a5dac523dee5009c86d7cf807d9a0bc6275d23d5d0029"
+    },
+    {
+      "key": "st.c1.in.0",
+      "text": "Oh nein! Im Dino-Park ist das Dino-Ei verschwunden!",
+      "file": "st.c1.in.0.mp3",
+      "fingerprint": "ffa7644317d67a88192d86c2b04c02244d8c7211c9be5c1ef4f678c3ae4376e8",
+      "bytes": 81128,
+      "duration": 5.041633,
+      "sha256": "cd41508124b1e85ecdf7f749130120ed4bc46f497cb03b40ff75c15a2014f0b6"
+    },
+    {
+      "key": "st.c1.in.1",
+      "text": "Kommst du mit? Wir sind die Koala-Detektei und suchen Hinweise!",
+      "file": "st.c1.in.1.mp3",
+      "fingerprint": "e543b80b85299bc1922585f8ad363eda549bf4bafb96b8a729e68b82e5da6adf",
+      "bytes": 94502,
+      "duration": 5.877551,
+      "sha256": "533ca33bc18c52c12e98be2da243182f6da1175363ac6e73e87bbfa543c77a3f"
+    },
+    {
+      "key": "cl.c1.0",
+      "text": "Hier liegt eine Feder!",
+      "file": "cl.c1.0.mp3",
+      "fingerprint": "9948c56d2e8642552f98ded0c8c2dd01c21a2f9600bd04a480699744decf87b9",
+      "bytes": 35570,
+      "duration": 2.194286,
+      "sha256": "c5b620dcfe66c5b537d02eb9362fe0fc66fbd6218a373813ea6a7f2f474c6654"
+    },
+    {
+      "key": "cs.c1.0",
+      "text": "Der Dieb, der das Ei geklaut hat, hat also Federn.",
+      "file": "cs.c1.0.mp3",
+      "fingerprint": "7e347a3dd80d5345a9d3c3b5d56d410aa3c6ccec7530f8a388db2c367b8db9fb",
+      "bytes": 67753,
+      "duration": 4.205714,
+      "sha256": "71d072e7eea47488cf5e4913aad2f6f6cb090012fd29a8f46aaa319a4cbbb8ed"
+    },
+    {
+      "key": "cl.c1.1",
+      "text": "Die Spuren enden hoch oben im Baum.",
+      "file": "cl.c1.1.mp3",
+      "fingerprint": "43decf4764c00cb040b99adfa3231aa7e83a355e43255fcfd530b4a8b80a9982",
+      "bytes": 52706,
+      "duration": 3.265306,
+      "sha256": "1674ca78438016847f5af66a00a405eeb20da65046461bf63d423857e0078674"
+    },
+    {
+      "key": "cs.c1.1",
+      "text": "Der Dieb kann also fliegen oder klettern. Er ist hoch oben im Baum.",
+      "file": "cs.c1.1.mp3",
+      "fingerprint": "7305411d35f6cb88d16bc5ed64f2bf2eaf119c3f134b47ad9ed3033ebd386c26",
+      "bytes": 98264,
+      "duration": 6.112653,
+      "sha256": "4ec55ce1cd8dc924f3f8b0ef1d62d6af6a787711cda1b809523a272e3b2f8ba2"
+    },
+    {
+      "key": "cl.c1.2",
+      "text": "Jemand hat Nuss-Krümel fallen lassen.",
+      "file": "cl.c1.2.mp3",
+      "fingerprint": "ff3331ff98c2b5b4ebe1e6a039e4af3cd00b47b5937b8f391b4a1a3d4aea512a",
+      "bytes": 43093,
+      "duration": 2.66449,
+      "sha256": "4d72c12190a6efd5d698ca29140d82e9beaee5ec6cda9537284f23df8f6914ca"
+    },
+    {
+      "key": "cs.c1.2",
+      "text": "Der Dieb mag also Nüsse.",
+      "file": "cs.c1.2.mp3",
+      "fingerprint": "690c3eac46bbad0ddb368f784bc316afea840babb8102473e722499ae7d1fae3",
+      "bytes": 31808,
+      "duration": 1.959184,
+      "sha256": "dba5e45768dfbbc5aeb8277c8d7c356decd18c180ee237aabcf45aa6f1dd6ad2"
+    },
+    {
+      "key": "cl.c1.3",
+      "text": "Und da ruft jemand: Hallo, Hallo!",
+      "file": "cl.c1.3.mp3",
+      "fingerprint": "0ba8e1abb74ad2729d713f998da42d3a09313f5e5efec4bf14d657f0abd4c8b5",
+      "bytes": 60230,
+      "duration": 3.73551,
+      "sha256": "6f2f1f0498e8d1fcedb536850592202151c11f731ad8504ecc6450d8a9dd5df7"
+    },
+    {
+      "key": "cs.c1.3",
+      "text": "Der Dieb kann also sprechen!",
+      "file": "cs.c1.3.mp3",
+      "fingerprint": "9afb2795191f6688f073763c20f53fc3553e2693d05b2d1631716db30e2776e8",
+      "bytes": 38078,
+      "duration": 2.35102,
+      "sha256": "6038a857469fa2f0d4b8485766007a0abf659b4229af8b7d34c7b4b6ee70865a"
+    },
+    {
+      "key": "cl.c1.4",
+      "text": "Das Ei liegt warm zugedeckt mit Blättern.",
+      "file": "cl.c1.4.mp3",
+      "fingerprint": "e09e0d18200f62a5d2fcbc80bdb51823dd30cd9acf133017d57775bb3754d378",
+      "bytes": 54378,
+      "duration": 3.369796,
+      "sha256": "b71c409acb8ffffb06bb5548df441d12fcbdab134986165e755f0b24e73f0d7f"
+    },
+    {
+      "key": "cs.c1.4",
+      "text": "Der Dieb wollte das Ei also warm halten. Er hat es nicht böse gemeint.",
+      "file": "cs.c1.4.mp3",
+      "fingerprint": "1f0b172623949cb626b1b05852841fff59c7c427a9bc6526d0d4c38896ed986a",
+      "bytes": 95756,
+      "duration": 5.955918,
+      "sha256": "eed915cc68376cf4abf0bd2892b665777717daf4f9d243768c6ffe8a73e1474a"
+    },
+    {
+      "key": "sp.c1.pinguin",
+      "text": "Ein Pinguin kann nicht auf einen Baum fliegen.",
+      "file": "sp.c1.pinguin.mp3",
+      "fingerprint": "3d443d6b8f1ae1b6770b449045f21be3f8aeb7445c1664ef7d9879449e0e1a78",
+      "bytes": 54378,
+      "duration": 3.369796,
+      "sha256": "ea1066dcda99861c910156602f992920998710659d87bec2dbf45797f12b84a9"
+    },
+    {
+      "key": "sp.c1.maus",
+      "text": "Eine Maus hat keine Federn.",
+      "file": "sp.c1.maus.mp3",
+      "fingerprint": "490d360aba2eb83153a4d791b94f6e50450b30652bc93c03626255a17cf94f38",
+      "bytes": 34316,
+      "duration": 2.115918,
+      "sha256": "bce698c1b27bae59eb412a40d6252097507fb9d6836ba8a8fbfae67dfe6acedc"
+    },
+    {
+      "key": "st.c1.out.0",
+      "text": "Der Papagei war es! Er hat das Ei nur warm gehalten, weil es so kalt war.",
+      "file": "st.c1.out.0.mp3",
+      "fingerprint": "a7594841172617814fd210e9466608cd93927606e52c1dda2bba48efcc89ed8d",
+      "bytes": 114564,
+      "duration": 7.131429,
+      "sha256": "8efcb6a6a60eb22ee32c08575f4154f1e6b3e3e9036b884cd8fe84efae96efef"
+    },
+    {
+      "key": "st.c1.out.1",
+      "text": "Das Dino-Ei ist wieder da. Toll gemacht, Detektivin!",
+      "file": "st.c1.out.1.mp3",
+      "fingerprint": "70c6925e266410fe8d87a3d5eb21dd83d7bc05aba98d8da7c5135b197f24b9a0",
+      "bytes": 82382,
+      "duration": 5.12,
+      "sha256": "8d0cf592ebd97366f3206cf592f9501bc0dc1579d2971b5c0c1a66b8f31a9e3f"
+    },
+    {
+      "key": "demo.satz",
+      "text": "Wie viel ist drei plus zwei?",
+      "file": "demo.satz.mp3",
+      "replaces": [
+        "ph.wie_viel_ist",
+        "n.3",
+        "ph.plus",
+        "n.2",
+        "?"
+      ],
+      "fingerprint": "64011c2d9c2e0713bc8f799b82f2e91a9a2db00476560d55a9f9a1ea6ed533e6",
+      "bytes": 34316,
+      "duration": 2.115918,
+      "sha256": "deb8320a8eaecf9ea461bf517cc85156ee3fd0cb6dc22ee0ca8d8bfc7823ee0b"
+    },
+    {
+      "key": "sentence.intro.A",
+      "text": "Schau mal, ein neuer Buchstabe! Das ist das A wie Affe.",
+      "file": "sentence.intro.A.mp3",
+      "replaces": [
+        "ph.neu",
+        "ph.das_ist",
+        "l.A",
+        "ph.wie",
+        "w.affe"
+      ],
+      "fingerprint": "ec95d61483a8c1133221cf3899a05e3aaa1b03aa9e21f2b333eec3801c278977",
+      "bytes": 89905,
+      "duration": 5.590204,
+      "sha256": "addad89dd46ddc3ab62215dff1fbee3c5296a406508936ba3b426561f53dc8b9"
+    },
+    {
+      "key": "sentence.tippe.A",
+      "text": "Tippe auf den Buchstaben A.",
+      "file": "sentence.tippe.A.mp3",
+      "replaces": [
+        "ph.tippe_buchstabe",
+        "l.A"
+      ],
+      "fingerprint": "14e5e9786a9de32ec6f27089146b797cfde6f811ddec884323f2028991a677fc",
+      "bytes": 37242,
+      "duration": 2.298776,
+      "sha256": "279eb8878d4909710818bdf16648a0c394247439867550d8276a03c0a26adf24"
+    },
+    {
+      "key": "sentence.anlaut.apfel",
+      "text": "Mit welchem Buchstaben fängt Apfel an?",
+      "file": "sentence.anlaut.apfel.mp3",
+      "replaces": [
+        "ph.womit",
+        "w.apfel",
+        "ph.an"
+      ],
+      "fingerprint": "bcc7d292b1b7c3517309bc694dd27e01641fa61e1debf5729b571b2b24c7a10f",
+      "bytes": 50617,
+      "duration": 3.134694,
+      "sha256": "f2d050847a414ee718c80e9ecdeeaeb95557cfc84d3f0b1de9f8e304f90623d7"
+    },
+    {
+      "key": "sentence.hilfe.A",
+      "text": "Das ist das A wie Apfel.",
+      "file": "sentence.hilfe.A.mp3",
+      "replaces": [
+        "ph.das_ist",
+        "l.A",
+        "ph.wie",
+        "w.apfel"
+      ],
+      "fingerprint": "31fde4881584389d7994ce117d3117413c354cfe85620600d7217926c40e0939",
+      "bytes": 34734,
+      "duration": 2.142041,
+      "sha256": "0eab9e449dccda2a563c87ace9b27dfba168e0e3e1103aa5f3604fcd5b43d779"
+    },
+    {
+      "key": "sentence.hilfe.apfel",
+      "text": "Apfel fängt an mit dem A.",
+      "file": "sentence.hilfe.apfel.mp3",
+      "replaces": [
+        "w.apfel",
+        "ph.faengt_mit",
+        "l.A"
+      ],
+      "fingerprint": "f1e802090d00bd1377568d4064ec284b14abe1df25220dc666179e5ea5a9906a",
+      "bytes": 34316,
+      "duration": 2.115918,
+      "sha256": "0d0be32d09a705a624a5227470d6600edaad8c799bd2b8514722553ed97be9c8"
+    },
+    {
+      "key": "sentence.richtig.n.3",
+      "text": "Die richtige Antwort ist drei.",
+      "file": "sentence.richtig.n.3.mp3",
+      "replaces": [
+        "ph.richtig",
+        "n.3"
+      ],
+      "fingerprint": "3a146a14b3cfec075731ed39c6c1e680f7491f1df7d8d549eba412215b191feb",
+      "bytes": 40168,
+      "duration": 2.481633,
+      "sha256": "69d1705a26223300a14500d43d33ffc1591acca0eb824a6ee7c2ff64ec72cb86"
+    },
+    {
+      "key": "sentence.richtig.n.5",
+      "text": "Die richtige Antwort ist fünf.",
+      "file": "sentence.richtig.n.5.mp3",
+      "replaces": [
+        "ph.richtig",
+        "n.5"
+      ],
+      "fingerprint": "a9041d601425bf86d5aaf574ac7fb55316546cb1f82cba303a2ad3835d7af118",
+      "bytes": 40168,
+      "duration": 2.481633,
+      "sha256": "cc2f6d9f48b611da193a27acf41104ddeb27421f4341346bcb7e8dea88492d61"
+    },
+    {
+      "key": "sentence.richtig.l.A",
+      "text": "Die richtige Antwort ist A.",
+      "file": "sentence.richtig.l.A.mp3",
+      "replaces": [
+        "ph.richtig",
+        "l.A"
+      ],
+      "fingerprint": "e227abe3c40284ec8e3d4c89fbbd83e9702729bc0c35d8d2a5e96176b6a7c44b",
+      "bytes": 37242,
+      "duration": 2.298776,
+      "sha256": "a292510f51819545724a61ea221600144525c49fb21a7329ac35a61dc71f62c0"
+    },
+    {
+      "key": "sentence.richtig.w.kreis",
+      "text": "Die richtige Antwort ist Kreis.",
+      "file": "sentence.richtig.w.kreis.mp3",
+      "replaces": [
+        "ph.richtig",
+        "w.kreis"
+      ],
+      "fingerprint": "0bbd3fabf37d233e38b00a3df29baf2a81dfa2cae93e47b5d0e31b74e7c811ee",
+      "bytes": 43093,
+      "duration": 2.66449,
+      "sha256": "a2e304d652ee7e021c9410898118ae4376e41fde646afb9e6ae18848e85063e5"
+    },
+    {
+      "key": "sentence.belohnung",
+      "text": "Geschafft! Du hast den Fall gelöst! Du hast einen neuen Sticker bekommen!",
+      "file": "sentence.belohnung.mp3",
+      "replaces": [
+        "ph.geschafft",
+        "ph.sticker"
+      ],
+      "fingerprint": "fbbf3dcb58ee86939c71a579b6059d627966b18bddb8248e8edaa5259a3cd941",
+      "bytes": 112057,
+      "duration": 6.974694,
+      "sha256": "0b84ac6851c4058e7902571989a62e4af421abd5e81741cab84571f3523d9670"
+    }
+  ],
+  "total_bytes": 2326913
+}
